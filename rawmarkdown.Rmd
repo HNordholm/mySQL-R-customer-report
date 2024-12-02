@@ -1,0 +1,73 @@
+---
+title: "Customer sales report"
+subtitle: "mySQL | Rmarkdown"
+author: "Hampus Nordholm"
+date: "2024-12-02"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    
+---
+
+```{r,message=FALSE,warning=FALSE,echo=FALSE}
+#LIBRARY -- 
+library(tidyverse)
+```
+
+
+```{r,message=FALSE,warning=FALSE,echo=FALSE}
+#Loading CSV:s exportedfrom mySQL -- 
+
+ch_tbl <- read_csv("custchurn.csv")
+
+top10_tbl <- read_csv("toptencust.csv")
+
+```
+
+# Background 
+
+The insights presented in this report were extracted from a MySQL database containing  customer transaction data. The primary objective of this analysis was to identify high-risk customers, those with an average time between orders greater than 365 days and to report the most profitable customers for the business. 
+
+# Insights 
+
+## High risk customers 
+
+```{r,echo=FALSE}
+#GGplot highrisk.vs loyal 
+ch_tbl %>% 
+  ggplot(aes(customer_status,total_customers,fill=customer_status))+
+  geom_col()+
+  labs(y="Total customers",x=NULL)
+
+#Numbers table-- 
+ch_tbl
+
+
+```
+
+The chart above shows the distribution of customers by their status (number of high-risk versus loyal customers). As shown there are 251 high-risk customers, with an average time between orders of 409 days, and 1,194 loyal customers, with an average time between orders of 199 days.
+
+## Top 10 customers by revenue 
+The barchart below displays the top 10 customers ranked by total revenue in descending order, followed by a list of their names, revenue, total orders and latest order date.
+
+```{r,echo=FALSE}
+#GGplot barchart -- 
+top10_tbl %>%
+  ggplot(aes(revenue,reorder(fullname, revenue),fill=revenue)) +  
+  geom_col()+
+  labs(x="Revenue(USD)",y="Name")+
+  theme(legend.position="none")
+
+```
+
+## Top 10 customers table 
+```{r,echo=FALSE}
+#Table --
+top10_tbl
+
+```
+
+
+
+
+
